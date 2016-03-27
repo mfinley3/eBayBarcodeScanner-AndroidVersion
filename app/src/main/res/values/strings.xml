@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">eBayBarcodeScanner-AndroidVersion</string>
+    <string name="app_name">eBay Barcode Scanner</string>
+    <string name="title_activity_barcode_scanner">barcodeScanner</string>
+    <string name="new_scan">New Scan</string>
+    <string name="cancelled_scan">Cancelled Scan</string>
+    <string name="sucessful_scan">Sucessful Scan!</string>
+
 </resources>
