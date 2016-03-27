@@ -46,7 +46,7 @@ public class barcodeScanner extends AppCompatActivity {
             } else {
                 Log.d("MainActivity", "Scanned");
                 TextView barcodeTextView = (TextView)findViewById(R.id.barcodeText);
-                barcodeTextView.setText(result.getContents());
+                barcodeTextView.setText("Last Scan: " + result.getContents());
                 Toast.makeText(this, R.string.sucessful_scan, Toast.LENGTH_SHORT).show();
             }
         } else {
