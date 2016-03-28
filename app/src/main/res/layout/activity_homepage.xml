@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="com.example.zkp.remed.HomePageActivity"
         tools:showIn="@layout/activity_homepage"
         android:orientation="vertical">
 
@@ -36,10 +35,9 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         android:layout_gravity="left|start"
+        app:headerLayout="@layout/nav_header"
         android:background="@android:color/white"
 
         app:menu="@menu/drawer_view" />
 
 </android.support.v4.widget.DrawerLayout>
-
-<!--app:headerLayout="@layout/nav_header"-->

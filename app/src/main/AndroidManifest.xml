@@ -27,9 +27,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".barcodeScanner"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".AnyOrientationCaptureActivity"
             android:screenOrientation="fullSensor"
             android:stateNotNeeded="true"

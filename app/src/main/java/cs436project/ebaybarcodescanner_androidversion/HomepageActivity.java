@@ -5,6 +5,8 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -34,17 +36,16 @@ public class HomepageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
 
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         ActionBar actionBar = getSupportActionBar();
-
+        actionBar.setTitle(R.string.scan_result);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-        //actionBar.setHomeAsUpIndicator(R.drawable.ic_drawer);
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_drawer_menu);
         actionBar.setDisplayShowTitleEnabled(true);
 
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
@@ -57,6 +58,18 @@ public class HomepageActivity extends AppCompatActivity {
 
         scanBarcodeCustomLayout(null);
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // The action bar home/up action should open or close the drawer.
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawer.openDrawer(GravityCompat.START);
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
