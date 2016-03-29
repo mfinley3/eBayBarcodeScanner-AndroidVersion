@@ -30,7 +30,7 @@ public class HomepageActivity extends AppCompatActivity {
     private NavigationView nvDrawer;
     private ActionBarDrawerToggle drawerToggle;
     private int seletectedDrawer = R.id.nav_first_fragment;
-    private String lstScn = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -139,6 +139,7 @@ public class HomepageActivity extends AppCompatActivity {
         integrator.initiateScan();
     }
 
+    // TODO: 3/28/2016 Try to add a searching for item popup message before going to last scan screen. Use async onProgressUpdate and onPostExecute. Possibly while loop?
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -149,8 +150,10 @@ public class HomepageActivity extends AppCompatActivity {
             } else {
                 Log.d("MainActivity", "Scanned");
                 TextView barcodeTextView = (TextView)findViewById(R.id.barcodeText);
+                new EbayFindItem().execute(result.getContents());
                 barcodeTextView.setText("Last Scan: " + result.getContents());
                 Toast.makeText(this, R.string.sucessful_scan, Toast.LENGTH_SHORT).show();
+                //System.out.println(XML);
             }
         } else {
             // This is important, otherwise the result will not be passed to the fragment
