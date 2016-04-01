@@ -7,15 +7,16 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 /**
- * Created by mfin3 on 3/28/2016.
+ * Created by mfin3 on 3/29/2016.
  */
 public class XMLParse {
     private static final String ns = null;
-    public static String XMLParser(InputStream in) throws XmlPullParserException, IOException {
+
+    public static HashMap<String, Object> parse(InputStream in) throws XmlPullParserException, IOException {
+
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -25,32 +26,66 @@ public class XMLParse {
         } finally {
             in.close();
         }
+
     }
 
-    private static String readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        //List title = new ArrayList();
-        String title = "";
-
-        parser.require(XmlPullParser.START_TAG, ns, "feed");
-        while (parser.next() != XmlPullParser.END_TAG) {
-            if (parser.getEventType() != XmlPullParser.START_TAG) {
-                continue;
-            }
-            String name = parser.getName();
-            // Starts by looking for the entry tag
-            if (name.equals("Title")) {
-                title = readTitle(parser);
-            } else {
-                skip(parser);
-            }
+    public static String parsePrice(InputStream in) throws XmlPullParserException, IOException {
+        try {
+            XmlPullParser parser = Xml.newPullParser();
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(in, null);
+            parser.nextTag();
+            return readPriceFeed(parser);
+        } finally {
+            in.close();
         }
-        return title;
+    }
+
+    // TODO get xml data that contains pricing info
+    private static String readPriceFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+        System.out.println("______________________________________________");
+        String price = "7";
+        while (parser.next() != XmlPullParser.END_DOCUMENT) {
+            String name = parser.getName();
+            System.out.println(name);
+            if(name == null)
+                continue;
+
+        }
+        System.out.println("______________________________________________");
+        return price;
+    }
+
+
+    private static HashMap<String, Object> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+
+        HashMap<String, Object> XMLContents = new HashMap<String, Object>();
+        //parser.require(XmlPullParser.START_TAG, ns, "feed");
+        while (parser.next() != XmlPullParser.END_DOCUMENT) {
+            String name = parser.getName();
+            System.out.println(name);
+            if(name == null)
+                continue;
+            else if(name.equals("Title"))
+                XMLContents.put("title", readTitle(parser));
+            else if(name.equals("StockPhotoURL"))
+                XMLContents.put("image", readURL(parser));
+
+        }
+        return XMLContents;
     }
 
     private static String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
         parser.require(XmlPullParser.START_TAG, ns, "Title");
         String title = readText(parser);
         parser.require(XmlPullParser.END_TAG, ns, "Title");
+        return title;
+    }
+
+    private static String readURL(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "StockPhotoURL");
+        String title = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "StockPhotoURL");
         return title;
     }
 
@@ -62,23 +97,4 @@ public class XMLParse {
         }
         return result;
     }
-
-    private static void skip(XmlPullParser parser) throws XmlPullParserException, IOException {
-        if (parser.getEventType() != XmlPullParser.START_TAG) {
-            throw new IllegalStateException();
-        }
-        int depth = 1;
-        while (depth != 0) {
-            switch (parser.next()) {
-                case XmlPullParser.END_TAG:
-                    depth--;
-                    break;
-                case XmlPullParser.START_TAG:
-                    depth++;
-                    break;
-            }
-        }
-    }
 }
-
-

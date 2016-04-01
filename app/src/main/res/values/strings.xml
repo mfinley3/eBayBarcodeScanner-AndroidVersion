@@ -10,6 +10,9 @@
     <string name="action_settings">Settings</string>
     <string name="scanner">Scanner</string>
     <string name="scan_result">Scan Result</string>
+    <string name="no_last_scan">No Scans Yet :(</string>
+    <string name="eBay_price"><u>Current Lowest eBay Listing</u></string>
+
 
     <string name="app_ID">AlecKret-QRPrice-PRD-2d2cad3ef-86adddf1</string>
 </resources>

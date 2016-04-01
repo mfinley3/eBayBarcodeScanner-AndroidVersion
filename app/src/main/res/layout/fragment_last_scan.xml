@@ -15,7 +15,8 @@
         android:layout_alignStart="@+id/button"
         android:layout_alignEnd="@+id/button"
         android:backgroundTint="#4af53a"
-        android:background="#4af53a" />
+        android:background="#4af53a"
+        android:onClick="postToEbay"/>
 
     <Button
         android:layout_width="250dp"
@@ -31,14 +32,36 @@
         android:backgroundTint="#f94242"
         android:background="#f94242" />
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/bookPhoto"
+        android:layout_marginStart="21dp"
+        android:layout_alignTop="@+id/title"
+        android:layout_alignParentStart="true" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="No Scans Yet :("
-        android:id="@+id/barcodeText"
-        android:layout_below="@+id/toolbar"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="128dp" />
+        android:textAlignment="gravity"
+        android:paddingRight="5dp"
+        android:textSize="15dp"
+        android:id="@+id/title"
+        android:layout_marginTop="59dp"
+        android:layout_marginStart="8dp"
+        android:layout_alignParentTop="true"
+        android:layout_toEndOf="@+id/bookPhoto" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/eBay_price"
+        android:textSize="20dp"
+        android:id="@+id/textView"
+        android:layout_above="@+id/bookPhoto"
+        android:layout_alignStart="@+id/bookPhoto"
+        android:layout_marginBottom="8dp" />
 
 </RelativeLayout>

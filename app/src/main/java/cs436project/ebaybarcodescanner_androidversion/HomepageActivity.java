@@ -1,5 +1,6 @@
 package cs436project.ebaybarcodescanner_androidversion;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -28,7 +29,7 @@ public class HomepageActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private NavigationView nvDrawer;
-    private ActionBarDrawerToggle drawerToggle;
+    private String lstScn;
     private int seletectedDrawer = R.id.nav_first_fragment;
 
     @Override
@@ -49,11 +50,10 @@ public class HomepageActivity extends AppCompatActivity {
         actionBar.setDisplayShowTitleEnabled(true);
 
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
-        // Setup drawer view
         setupDrawerContent(nvDrawer);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.flContent, new LastScanFragment());
+        ft.add(R.id.flContent, new NoScanFragment());
         ft.commit();
 
         scanBarcodeCustomLayout(null);
@@ -62,7 +62,6 @@ public class HomepageActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // The action bar home/up action should open or close the drawer.
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawer.openDrawer(GravityCompat.START);
@@ -84,8 +83,7 @@ public class HomepageActivity extends AppCompatActivity {
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
-        // Create a new fragment and specify the planet to show based on
-        // position
+
         if(menuItem.getItemId() == seletectedDrawer) {
             mDrawer.closeDrawers();
             return;
@@ -119,14 +117,16 @@ public class HomepageActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
 
-        // Highlight the selected item, update the title, and close the drawer
         menuItem.setChecked(true);
         setTitle(menuItem.getTitle());
         mDrawer.closeDrawers();
+    }
+
+    public void postToEbay(View view) {
+        
     }
 
     public void scanBarcodeCustomLayout(View view) {
@@ -149,15 +149,16 @@ public class HomepageActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.cancelled_scan, Toast.LENGTH_SHORT).show();
             } else {
                 Log.d("MainActivity", "Scanned");
-                TextView barcodeTextView = (TextView)findViewById(R.id.barcodeText);
-                new EbayFindItem().execute(result.getContents());
-                barcodeTextView.setText("Last Scan: " + result.getContents());
+                lstScn = result.getContents();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.flContent, new LastScanFragment()).commitAllowingStateLoss();
+                new EbayFindItem(this).execute(result.getContents());
                 Toast.makeText(this, R.string.sucessful_scan, Toast.LENGTH_SHORT).show();
-                //System.out.println(XML);
             }
         } else {
-            // This is important, otherwise the result will not be passed to the fragment
+
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
 }
