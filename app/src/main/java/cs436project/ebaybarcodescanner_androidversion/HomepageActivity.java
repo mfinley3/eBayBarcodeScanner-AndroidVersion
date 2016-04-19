@@ -125,8 +125,18 @@ public class HomepageActivity extends AppCompatActivity {
         mDrawer.closeDrawers();
     }
 
+    public void setCatID(View view) {
+
+    }
+
     public void postToEbay(View view) {
-        
+        Intent intent = new Intent(this, PostBookToEbay.class);
+        startActivity(intent);
+    }
+
+    public void manualSearch(View view) {
+        System.out.println("clicked");
+
     }
 
     public void scanBarcodeCustomLayout(View view) {
@@ -148,12 +158,12 @@ public class HomepageActivity extends AppCompatActivity {
                 Log.d("MainActivity", "Cancelled scan");
                 Toast.makeText(this, R.string.cancelled_scan, Toast.LENGTH_SHORT).show();
             } else {
+                Toast.makeText(this, R.string.sucessful_scan, Toast.LENGTH_SHORT).show();
                 Log.d("MainActivity", "Scanned");
                 lstScn = result.getContents();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.flContent, new LastScanFragment()).commitAllowingStateLoss();
                 new EbayFindItem(this).execute(result.getContents());
-                Toast.makeText(this, R.string.sucessful_scan, Toast.LENGTH_SHORT).show();
             }
         } else {
 

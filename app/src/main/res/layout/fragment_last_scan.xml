@@ -51,17 +51,30 @@
         android:layout_marginTop="59dp"
         android:layout_marginStart="8dp"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/bookPhoto" />
+        android:layout_toEndOf="@+id/bookPhoto"
+        android:onClick="manualSearch" />
+
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/eBay_price"
         android:textSize="20dp"
-        android:id="@+id/textView"
+        android:id="@+id/eBayListHead"
         android:layout_above="@+id/bookPhoto"
         android:layout_alignStart="@+id/bookPhoto"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginBottom="8dp"
+        android:onClick="manualSearch"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:id="@+id/priceView"
+        android:layout_below="@+id/bookPhoto"
+        android:layout_alignStart="@+id/bookPhoto"
+        android:layout_marginTop="9dp"
+        android:layout_alignEnd="@+id/button2" />
 
 </RelativeLayout>

@@ -7,9 +7,10 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <permission
-        android:name="cs436project.ebaybarcodescanner_androidversion.permission.C2D_MESSAGE"
+        android:name="cs436project.ebaybarcodescanner_androidversion.permission.CAMERA"
         android:protectionLevel="signature" />
 
     <application
@@ -18,8 +19,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
-                  android:screenOrientation="portrait">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,9 +36,10 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".HomepageActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" />
 
-        </activity>
+        <activity android:name=".PostBookToEbay" />
+
     </application>
 
 </manifest>

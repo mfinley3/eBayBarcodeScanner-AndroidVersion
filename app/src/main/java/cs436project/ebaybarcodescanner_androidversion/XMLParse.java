@@ -29,7 +29,7 @@ public class XMLParse {
 
     }
 
-    public static String parsePrice(InputStream in) throws XmlPullParserException, IOException {
+    public static HashMap<String, Object> parsePrice(InputStream in) throws XmlPullParserException, IOException {
         try {
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -42,18 +42,19 @@ public class XMLParse {
     }
 
     // TODO get xml data that contains pricing info
-    private static String readPriceFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        System.out.println("______________________________________________");
-        String price = "7";
+    private static HashMap<String, Object> readPriceFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
+        HashMap<String, Object> XMLContents = new HashMap<String, Object>();
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
             String name = parser.getName();
-            System.out.println(name);
             if(name == null)
                 continue;
+            else if(name.equals("convertedCurrentPrice"))
+                XMLContents.put("price", readPrice(parser));
+            else if(name.equals("categoryId"))
+                XMLContents.put("categoryId", readCatID(parser));
 
         }
-        System.out.println("______________________________________________");
-        return price;
+        return XMLContents;
     }
 
 
@@ -63,7 +64,7 @@ public class XMLParse {
         //parser.require(XmlPullParser.START_TAG, ns, "feed");
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
             String name = parser.getName();
-            System.out.println(name);
+
             if(name == null)
                 continue;
             else if(name.equals("Title"))
@@ -73,6 +74,20 @@ public class XMLParse {
 
         }
         return XMLContents;
+    }
+
+    private static String readCatID(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "categoryId");
+        String catId = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "categoryId");
+        return catId;
+    }
+
+    private static String readPrice(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "convertedCurrentPrice");
+        String price = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "convertedCurrentPrice");
+        return price;
     }
 
     private static String readTitle(XmlPullParser parser) throws IOException, XmlPullParserException {
