@@ -15,7 +15,6 @@
         android:layout_alignStart="@+id/button"
         android:layout_alignEnd="@+id/button"
         android:backgroundTint="#4af53a"
-        android:background="#4af53a"
         android:onClick="postToEbay"/>
 
     <Button
@@ -29,8 +28,7 @@
         android:layout_marginBottom="61dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:backgroundTint="#f94242"
-        android:background="#f94242" />
+        android:backgroundTint="#f94242" />
 
     <ImageView
         android:layout_width="wrap_content"

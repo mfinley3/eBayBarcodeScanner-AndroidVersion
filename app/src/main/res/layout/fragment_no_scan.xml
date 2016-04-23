@@ -6,19 +6,6 @@
     tools:context="cs436project.ebaybarcodescanner_androidversion.NoScanFragment">
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/post_on_ebay"
-        android:id="@+id/button2"
-        android:layout_marginBottom="17dp"
-        android:textSize="15dp"
-        android:layout_above="@+id/button"
-        android:layout_alignStart="@+id/button"
-        android:layout_alignEnd="@+id/button"
-        android:backgroundTint="#4af53a"
-        android:background="#4af53a" />
-
-    <Button
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:text="@string/new_scan"
@@ -26,11 +13,10 @@
 
         android:id="@+id/button"
         android:textSize="15dp"
-        android:layout_marginBottom="61dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="126dp"
         android:backgroundTint="#f94242"
-        android:background="#f94242" />
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -37,8 +37,13 @@
         <activity
             android:name=".HomepageActivity"
             android:screenOrientation="portrait" />
-
-        <activity android:name=".PostBookToEbay" />
+        <activity
+            android:name=".PostToEbay"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cs436project.ebaybarcodescanner_androidversion.HomepageActivity" />
+        </activity>
 
     </application>
 

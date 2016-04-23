@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="cs436project.ebaybarcodescanner_androidversion.PostToEbay"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/web_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="86dp" />
+
+    <WebView  xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/webView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@+id/webtoolBar"
+        android:layout_alignParentStart="true" />
+
+</LinearLayout>

@@ -5,7 +5,7 @@
     <string name="last_scan">Last Scan: </string>
     <string name="post_on_ebay">Post on eBay</string>
     <string name="cancelled_scan">Cancelled Scan</string>
-    <string name="sucessful_scan">Sucessful Scan!</string>
+    <string name="sucessful_scan">Successful Scan!</string>
     <string name="history">History</string>
     <string name="action_settings">Settings</string>
     <string name="scanner">Scanner</string>
@@ -15,6 +15,6 @@
 
 
     <string name="app_ID">AlecKret-QRPrice-PRD-2d2cad3ef-86adddf1</string>
-    <string name="title_activity_post_to_ebay">PostToEbay</string>
-    <string name="title_activity_werwrtwretwretwret">werwrtwretwretwret</string>
+    <string name="once_done">All done posting? Press the back button.</string>
+
 </resources>
