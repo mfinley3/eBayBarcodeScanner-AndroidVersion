@@ -19,7 +19,14 @@ public class EbayFindItem extends AsyncTask<String, Void, HashMap<String, Object
     Activity mActivity;
     ProgressDialog progressSpinner = null;
 
-    public EbayFindItem(Activity activity) {
+    public interface AsyncResponse {
+        void processFinish(HashMap<String, Object> output);
+    }
+
+    public AsyncResponse delegate = null;
+
+    public EbayFindItem(Activity activity, AsyncResponse delegate) {
+        this.delegate = delegate;
         mActivity = activity;
     }
 
@@ -74,6 +81,14 @@ public class EbayFindItem extends AsyncTask<String, Void, HashMap<String, Object
 
     }
 
+//    private String filterTitle(String XMLContents) {
+//            int endTitle = XMLContents.indexOf("by");
+//                if (endTitle != -1)
+//                    return XMLContents.substring(0 , endTitle);
+//            return XMLContents;
+//    }
+
+
     protected void onPostExecute(HashMap<String, Object> result) {
         if(result.containsKey("title")) {
             TextView titleTextView = (TextView)mActivity.findViewById(R.id.title);
@@ -83,6 +98,9 @@ public class EbayFindItem extends AsyncTask<String, Void, HashMap<String, Object
             headTextView.setPaintFlags(headTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             headTextView.setClickable(false);
             titleTextView.setClickable(false);
+
+//            result.put("title", filterTitle((String) result.get("title")));
+
         } else {
             TextView headTextView = (TextView)mActivity.findViewById(R.id.eBayListHead);
             headTextView.setText("We couldn't find this book");
@@ -112,9 +130,10 @@ public class EbayFindItem extends AsyncTask<String, Void, HashMap<String, Object
         }
 
         if(result.containsKey("categoryId")) {
-            System.out.println(result.get("categoryId"));
+            result.put("catID", result.get("categoryId"));
         }
 
+        delegate.processFinish(result);
         super.onPostExecute(result);
         progressSpinner.dismiss();
     }

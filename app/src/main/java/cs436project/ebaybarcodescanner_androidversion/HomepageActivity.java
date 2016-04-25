@@ -19,12 +19,18 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.util.HashMap;
+
 public class HomepageActivity extends AppCompatActivity {
+
+
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private String lstScn;
     private int seletectedDrawer = R.id.nav_first_fragment;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,7 @@ public class HomepageActivity extends AppCompatActivity {
         setupDrawerContent(nvDrawer);
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
         ft.add(R.id.flContent, new NoScanFragment());
         ft.commit();
 
@@ -92,12 +99,9 @@ public class HomepageActivity extends AppCompatActivity {
                 fragmentClass = LastScanFragment.class;
                 break;
             case R.id.nav_second_fragment:
-                seletectedDrawer = R.id.nav_first_fragment;
-                Toast.makeText(this, "Not Yet Implemented", Toast.LENGTH_SHORT).show();
-                mDrawer.closeDrawers();
-                return;
-                //fragmentClass = HistoryFragment.class;
-                //break;
+                seletectedDrawer = R.id.nav_second_fragment;
+                fragmentClass = HistoryFragment.class;
+                break;
             default:
                 seletectedDrawer = R.id.nav_first_fragment;
                 fragmentClass = LastScanFragment.class;
@@ -119,9 +123,6 @@ public class HomepageActivity extends AppCompatActivity {
         mDrawer.closeDrawers();
     }
 
-    public void setCatID(View view) {
-
-    }
 
     public void postToEbay(View view) {
         Intent intent = new Intent(this, PostToEbay.class);
@@ -143,7 +144,6 @@ public class HomepageActivity extends AppCompatActivity {
         integrator.initiateScan();
     }
 
-    // TODO: 3/28/2016 Try to add a searching for item popup message before going to last scan screen. Use async onProgressUpdate and onPostExecute. Possibly while loop?
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
@@ -152,12 +152,23 @@ public class HomepageActivity extends AppCompatActivity {
                 Log.d("MainActivity", "Cancelled scan");
                 Toast.makeText(this, R.string.cancelled_scan, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, R.string.sucessful_scan, Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(this, R.string.successful_scan, Toast.LENGTH_SHORT).show();
                 Log.d("MainActivity", "Scanned");
                 lstScn = result.getContents();
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 fragmentManager.beginTransaction().replace(R.id.flContent, new LastScanFragment()).commitAllowingStateLoss();
-                new EbayFindItem(this).execute(result.getContents());
+
+                new EbayFindItem(this, new EbayFindItem.AsyncResponse() {
+
+                    @Override
+                    public void processFinish(HashMap<String, Object> output){
+                        ApplicationState state = ((ApplicationState) getApplicationContext());
+                        output.put("barcode",lstScn);
+                        state.addHistory(output);
+
+                    }
+                }).execute(result.getContents());
             }
         } else {
 

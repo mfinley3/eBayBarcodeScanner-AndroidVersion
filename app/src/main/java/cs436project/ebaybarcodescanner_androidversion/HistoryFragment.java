@@ -1,30 +1,28 @@
 package cs436project.ebaybarcodescanner_androidversion;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import java.util.ArrayList;
 
 public class HistoryFragment extends ListFragment {
-    private ListView lv;
+
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.history_list, container, false);
-        // printall();
-        return view;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_messages, container,
+                false);
+
+        String[] values = new String[] { "Message1", "Message2", "Message3" };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1, values);
+        setListAdapter(adapter);
+        return rootView;
+    }
 
     }
 
@@ -65,4 +63,4 @@ public class HistoryFragment extends ListFragment {
             System.out.println(s);
         }
     }*/
-}
+
