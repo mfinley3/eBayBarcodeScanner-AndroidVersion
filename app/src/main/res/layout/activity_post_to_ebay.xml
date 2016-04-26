@@ -15,7 +15,10 @@
         android:id="@+id/webView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/webtoolBar"
+        android:layout_below="@+id/loading"
         android:layout_alignParentStart="true" />
+
+
+
 
 </LinearLayout>

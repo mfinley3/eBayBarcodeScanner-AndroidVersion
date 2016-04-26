@@ -41,7 +41,6 @@ public class XMLParse {
         }
     }
 
-    // TODO get xml data that contains pricing info
     private static HashMap<String, Object> readPriceFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
         HashMap<String, Object> XMLContents = new HashMap<String, Object>();
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
@@ -52,6 +51,8 @@ public class XMLParse {
                 XMLContents.put("price", readPrice(parser));
             else if(name.equals("categoryId"))
                 XMLContents.put("categoryId", readCatID(parser));
+            else if(name.equals("totalEntries"))
+                XMLContents.put("totalEntries", readTotalEntries(parser));
 
         }
         return XMLContents;
@@ -61,10 +62,8 @@ public class XMLParse {
     private static HashMap<String, Object> readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
 
         HashMap<String, Object> XMLContents = new HashMap<String, Object>();
-        //parser.require(XmlPullParser.START_TAG, ns, "feed");
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
             String name = parser.getName();
-
             if(name == null)
                 continue;
             else if(name.equals("Title"))
@@ -72,8 +71,16 @@ public class XMLParse {
             else if(name.equals("StockPhotoURL"))
                 XMLContents.put("image", readURL(parser));
 
+
         }
         return XMLContents;
+    }
+
+    private static String readTotalEntries(XmlPullParser parser) throws IOException, XmlPullParserException {
+        parser.require(XmlPullParser.START_TAG, ns, "totalEntries");
+        String entries = readText(parser);
+        parser.require(XmlPullParser.END_TAG, ns, "totalEntries");
+        return entries;
     }
 
     private static String readCatID(XmlPullParser parser) throws IOException, XmlPullParserException {

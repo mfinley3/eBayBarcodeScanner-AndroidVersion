@@ -12,9 +12,11 @@
     <string name="scan_result">Scan Result</string>
     <string name="no_last_scan">No Scans Yet :(</string>
     <string name="eBay_price"><u>Current Lowest eBay Listing</u></string>
-
-
+    <string name="scan_prompt">Scan a Barcode</string>
+    <string name="failed_search">This may mean the book is listed differently.\nClick here to do a manual search.</string>
     <string name="app_ID">AlecKret-QRPrice-PRD-2d2cad3ef-86adddf1</string>
     <string name="once_done">All done posting? Press the back button.</string>
-
+    <string name="no_price">Could not find price information on eBay.\nThis usually means there are no current listings.</string>
+    <string name="found_book">eBay Listing Found!</string>
+    <string name="rec_selling">Recommended Selling Price: $</string>
 </resources>

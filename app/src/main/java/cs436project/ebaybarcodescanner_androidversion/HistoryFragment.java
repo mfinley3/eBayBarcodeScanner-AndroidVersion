@@ -1,66 +1,61 @@
 package cs436project.ebaybarcodescanner_androidversion;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class HistoryFragment extends ListFragment {
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_messages, container,
-                false);
+    public void onListItemClick(ListView l, View v, int position, long id) {
 
-        String[] values = new String[] { "Message1", "Message2", "Message3" };
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                android.R.layout.simple_list_item_1, values);
-        setListAdapter(adapter);
-        return rootView;
-    }
+        ApplicationState state = ((ApplicationState) getActivity().getApplicationContext());
 
-    }
+        ArrayList<HashMap<String,Object>> history = state.getHistory();
 
-/*    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        printall();
-        super.onActivityCreated(savedInstanceState);
-
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-                getActivity(),
-                android.R.layout.simple_list_item_1,
-                historyList );
-
-        setListAdapter(arrayAdapter);
-        getListView().setOnItemClickListener(this);
+        ((HomepageActivity)getActivity()).selectFromHistory(history.get(position).get("barcode").toString());
 
     }
 
     @Override
-    public void onItemClick(AdapterView<?> arg0, View view, int position,
-                            long id) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_history, container, false);
 
-        String[] Itemname = historyList.toArray(new String[historyList.size()]);
+        ApplicationState state = ((ApplicationState) getActivity().getApplicationContext());
+        ArrayList<HashMap<String,Object>> history = state.getHistory();
+        ArrayList<String> titles = new ArrayList<>();
+        ArrayList<Bitmap> images = new ArrayList<>();
+        ArrayList<String> prices = new ArrayList<>();
 
-        Toast.makeText(getActivity(), Itemname[position], Toast.LENGTH_SHORT)
-                .show();
-
-    }
-
-    public void addNewScan(String scan) {
-        historyList.add(scan);
-    }
-
-    public void printall(){
-        System.out.println("sdgsdfgsdfgsfdgsdfgsfdgfdgfdgsf");
-
-        for(String s: historyList){
-            System.out.println(s);
+        for(HashMap hash : history){
+            titles.add(filterTitle(hash.get("title").toString()));
+            images.add((Bitmap) hash.get("image"));
+            prices.add("Lowest price was: $" + hash.get("price").toString());
         }
-    }*/
 
+        String[] values = titles.toArray(new String[titles.size()]);
+        Bitmap[] image = images.toArray(new Bitmap[images.size()]);
+        String[] price = prices.toArray(new String[prices.size()]);
+
+        CustomListAdapter adapter = new CustomListAdapter(getActivity(), values, image, price);
+        setListAdapter(adapter);
+
+
+        return view;
+    }
+    private String filterTitle(String XMLContents) {
+        int endTitle = XMLContents.indexOf("by");
+        if (endTitle != -1)
+            return XMLContents.substring(0 , endTitle);
+        return XMLContents;
+    }
+}

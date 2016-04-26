@@ -5,13 +5,13 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.widget.ImageView;
 import android.widget.TextView;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 
 public class EbayFindItem extends AsyncTask<String, Void, HashMap<String, Object>> {
@@ -40,6 +40,7 @@ public class EbayFindItem extends AsyncTask<String, Void, HashMap<String, Object
     }
 
     protected HashMap<String, Object> doInBackground(String... ISBN) {
+
         HashMap<String, Object> XMLContents = null;
         HashMap<String, Object> XMLPriceContents;
         String urlString = "http://open.api.ebay.com/shopping?callname=FindProducts&responseencoding=XML&appid=AlecKret-QRPrice-PRD-2d2cad3ef-86adddf1&siteid=0&version=525&productId.type=ISBN&productId.value=" + ISBN[0];
@@ -50,6 +51,7 @@ public class EbayFindItem extends AsyncTask<String, Void, HashMap<String, Object
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             XMLContents = XMLParse.parse(connection.getInputStream());
             connection.disconnect();
+            XMLContents.put("barcode", ISBN[0]);
             if(XMLContents.containsKey("image")) {
                 Bitmap img = BitmapFactory.decodeStream((InputStream) new URL((String)XMLContents.get("image")).getContent());
                 Bitmap resizedBitmap = Bitmap.createScaledBitmap(img, 175, 235, false);
@@ -77,36 +79,22 @@ public class EbayFindItem extends AsyncTask<String, Void, HashMap<String, Object
 
     }
 
-    protected void onProgressUpdate(Integer... progress) {
-
-    }
-
-//    private String filterTitle(String XMLContents) {
-//            int endTitle = XMLContents.indexOf("by");
-//                if (endTitle != -1)
-//                    return XMLContents.substring(0 , endTitle);
-//            return XMLContents;
-//    }
-
-
     protected void onPostExecute(HashMap<String, Object> result) {
         if(result.containsKey("title")) {
             TextView titleTextView = (TextView)mActivity.findViewById(R.id.title);
             titleTextView.setText((String) result.get("title"));
             TextView headTextView = (TextView)mActivity.findViewById(R.id.eBayListHead);
-            headTextView.setText("eBay Listing Found!");
+            headTextView.setText(R.string.found_book);
             headTextView.setPaintFlags(headTextView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
             headTextView.setClickable(false);
             titleTextView.setClickable(false);
-
-//            result.put("title", filterTitle((String) result.get("title")));
 
         } else {
             TextView headTextView = (TextView)mActivity.findViewById(R.id.eBayListHead);
             headTextView.setText("We couldn't find this book");
             headTextView.setClickable(true);
             TextView titleTextView = (TextView)mActivity.findViewById(R.id.title);
-            titleTextView.setText("This may mean the book is listed differently.\nClick here to do a manual search.");
+            titleTextView.setText(R.string.failed_search);
             titleTextView.setClickable(true);
             super.onPostExecute(result);
             progressSpinner.dismiss();
@@ -126,11 +114,41 @@ public class EbayFindItem extends AsyncTask<String, Void, HashMap<String, Object
             priceTextView.setText("The lowest price on eBay is: $" + (String) result.get("price"));
         } else {
             TextView priceTextView = (TextView)mActivity.findViewById(R.id.priceView);
-            priceTextView.setText("Could not find price information on eBay.\n This usually means there are no current listings.");
+            priceTextView.setText(R.string.no_price);
         }
 
         if(result.containsKey("categoryId")) {
             result.put("catID", result.get("categoryId"));
+        }
+
+        if(result.containsKey("totalEntries")) {
+            TextView priceTextView = (TextView)mActivity.findViewById(R.id.listingsView);
+            priceTextView.setText("Number of listings on eBay: "+ (String) result.get("totalEntries"));
+        } else {
+            TextView priceTextView = (TextView)mActivity.findViewById(R.id.listingsView);
+            priceTextView.setText("");
+        }
+
+        if(result.containsKey("price") && result.containsKey("totalEntries")) {
+            TextView recSellPrice = (TextView)mActivity.findViewById(R.id.recSellPrice);
+            double fractionOff;
+            double sellPrice = Double.parseDouble(result.get("price").toString());
+            int entries = Integer.parseInt(result.get("totalEntries").toString());
+                if (entries > 10)
+                    fractionOff = .05;
+
+                else if (entries > 5)
+                    fractionOff = .15;
+
+                else if (entries > 2)
+                    fractionOff = .22;
+
+                else
+                fractionOff = .30;
+
+            sellPrice = sellPrice - (sellPrice * fractionOff);
+            DecimalFormat df = new DecimalFormat("#.##");
+            recSellPrice.setText("Recommended Selling Price: $" + df.format(sellPrice));
         }
 
         delegate.processFinish(result);

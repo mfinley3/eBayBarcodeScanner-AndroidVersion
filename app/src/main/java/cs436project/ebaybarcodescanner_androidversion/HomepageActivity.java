@@ -1,5 +1,6 @@
 package cs436project.ebaybarcodescanner_androidversion;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -8,12 +9,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -28,7 +32,10 @@ public class HomepageActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private NavigationView nvDrawer;
     private String lstScn;
+    private HashMap<String,Object> lastScan;
     private int seletectedDrawer = R.id.nav_first_fragment;
+    private ActionBar actionBar;
+    private String manualBarcode;
 
 
 
@@ -42,7 +49,7 @@ public class HomepageActivity extends AppCompatActivity {
 
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        ActionBar actionBar = getSupportActionBar();
+        actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.scan_result);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
@@ -83,6 +90,24 @@ public class HomepageActivity extends AppCompatActivity {
                 });
     }
 
+    public void selectFromHistory(String barcode) {
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.flContent, new LastScanFragment()).commit();
+        new EbayFindItem(this, new EbayFindItem.AsyncResponse() {
+
+            @Override
+            public void processFinish(HashMap<String, Object> output) {
+                ApplicationState state = ((ApplicationState) getApplicationContext());
+                output.put("barcode", lstScn);
+                state.addHistory(output);
+
+            }
+        }).execute(barcode);
+        nvDrawer.setCheckedItem(R.id.nav_first_fragment);
+        seletectedDrawer = R.id.nav_first_fragment;
+
+    }
     public void selectDrawerItem(MenuItem menuItem) {
 
         if(menuItem.getItemId() == seletectedDrawer) {
@@ -97,14 +122,17 @@ public class HomepageActivity extends AppCompatActivity {
             case R.id.nav_first_fragment:
                 seletectedDrawer = R.id.nav_first_fragment;
                 fragmentClass = LastScanFragment.class;
+                actionBar.setTitle(R.string.scan_result);
                 break;
             case R.id.nav_second_fragment:
                 seletectedDrawer = R.id.nav_second_fragment;
                 fragmentClass = HistoryFragment.class;
+                actionBar.setTitle(R.string.history);
                 break;
             default:
                 seletectedDrawer = R.id.nav_first_fragment;
                 fragmentClass = LastScanFragment.class;
+                actionBar.setTitle(R.string.scan_result);
         }
 
         try {
@@ -116,11 +144,14 @@ public class HomepageActivity extends AppCompatActivity {
         }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commitAllowingStateLoss();
 
         menuItem.setChecked(true);
         setTitle(menuItem.getTitle());
         mDrawer.closeDrawers();
+        if(seletectedDrawer == R.id.nav_first_fragment) {
+            selectFromHistory(lastScan.get("barcode").toString());
+        }
     }
 
 
@@ -130,8 +161,29 @@ public class HomepageActivity extends AppCompatActivity {
     }
 
     public void manualSearch(View view) {
-        System.out.println("clicked");
+        AlertDialog.Builder popup = new AlertDialog.Builder(this);
+        popup.setTitle("Manual Search:\nEnter a barcode number");
 
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        popup.setView(input);
+
+
+        popup.setPositiveButton("Search", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                manualBarcode = input.getText().toString();
+                selectFromHistory(manualBarcode);
+            }
+        });
+        popup.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        popup.show();
     }
 
     public void scanBarcodeCustomLayout(View view) {
@@ -164,8 +216,8 @@ public class HomepageActivity extends AppCompatActivity {
                     @Override
                     public void processFinish(HashMap<String, Object> output){
                         ApplicationState state = ((ApplicationState) getApplicationContext());
-                        output.put("barcode",lstScn);
                         state.addHistory(output);
+                        lastScan = output;
 
                     }
                 }).execute(result.getContents());

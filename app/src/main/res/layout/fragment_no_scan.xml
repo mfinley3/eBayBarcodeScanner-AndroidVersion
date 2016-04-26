@@ -14,9 +14,21 @@
         android:id="@+id/button"
         android:textSize="15dp"
         android:layout_marginBottom="126dp"
-        android:backgroundTint="#f94242"
+        android:backgroundTint="#fb0000"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Manual Search"
+        android:id="@+id/button3"
+        android:layout_marginTop="47dp"
+        android:backgroundTint="#edde56"
+        android:onClick="manualSearch"
+        android:layout_alignTop="@+id/button"
+        android:layout_alignStart="@+id/button"
+        android:layout_alignEnd="@+id/button" />
 
     <TextView
         android:layout_width="wrap_content"

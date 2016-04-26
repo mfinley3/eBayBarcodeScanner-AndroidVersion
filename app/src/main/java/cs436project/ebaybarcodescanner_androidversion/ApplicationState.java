@@ -18,7 +18,7 @@ public class ApplicationState extends Application {
 
     public void addHistory(HashMap<String, Object> book) {
         history.add(0, book);
-        if(history.size() > 10)
+        if(history.size() > 15)
             history.remove(history.size() - 1);
 
     }
